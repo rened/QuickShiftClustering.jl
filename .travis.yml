@@ -12,5 +12,5 @@ before_install:
 script:
   - julia -e 'Pkg.init(); Pkg.add("FactCheck")'
   - julia -e 'Pkg.clone("https://github.com/rened/QuickShiftClustering.jl.git")'
-  - julia -e 'Pkg.resolve()'
+  - julia -e 'Pkg.resolve(); Pkg.checkout("ProgressMeter")'
   - julia ~/.julia/v0.3/QuickShiftClustering/test/runtests.jl
