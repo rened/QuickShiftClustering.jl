@@ -33,6 +33,20 @@ data 2 x N | Runtime quickshift | Runtime quickshiftlabels
 
 For larger numbers of data points, you might want to use [KShiftsClustering.jl](https://github.com/rened/KShiftsClustering.jl) to cluster the `N` data points to e.g. 10.000 cluster centers, and then perform QuickShift on those.
 
+Comparison with `kmedoids` for 20.000 points:
+
+```jl
+using Clustering, QuickShiftClustering, FunctionalDataUtils
+
+data = rand(2,20000)
+@time a = kmedoids(1-exp(-distance(data,data)*10),10)
+#  =>  elapsed time: 56.666481916 seconds (41126243444 bytes allocated, 15.31% gc time)
+
+@time labels = quickshiftlabels(quickshift(data))
+#  =>  elapsed time: 1.187448525 seconds (277816624 bytes allocated, 28.79% gc time)
+```
+
+
 #### Example
 
 ```jl
