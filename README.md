@@ -10,11 +10,13 @@ for Mode Seeking](http://cronos.rutgers.edu/~meer/TEACH/ADD/vedaldiS08quick.pdf)
 #### Functions
 
 ```jl
-a = quickshift(data  [, sigma])
+a = quickshift(data)
+a = quickshift(data, sigma)
 # cluster ndim x nsamplex matrix data.
 # sigma: Gaussian kernel width, see paper
 
-labels = quickshiftlabels(a::QuickShift  [, maxlinklength])
+labels = quickshiftlabels(a::QuickShift)
+labels = quickshiftlabels(a::QuickShift, maxlinklength)
 # cut links in the tree with length > maxlinklength
 # return cluster labels for data points.
 
