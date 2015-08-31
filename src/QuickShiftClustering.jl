@@ -49,8 +49,8 @@ function gauss(data, n, ind, factor1, factor2)
 end
 
 quickshift(data, a...) = quickshift(convert(Array{Float32,2},data), a...)
-quickshift(data::Array{Float32,2}, sigma) = quickshift(data, Float32(sigma))
-function quickshift(data::Array{Float32,2}, sigma::Float32 = Float32(median(distance(randsample(data,1000)))/100))
+quickshift(data::Array{Float32,2}, sigma) = quickshift(data, convert(Float32,sigma))
+function quickshift(data::Array{Float32,2}, sigma::Float32 = convert(Float32,median(distance(randsample(data,1000)))/100))
     tree = KDTrees.KDTree(data)
     # @show sigma
     N = len(data)
