@@ -7,7 +7,7 @@ isinstalled("PyPlot") && begin
     using PyPlot
 end
 
-using KDTrees, ProgressMeter, FunctionalDataUtils
+using NearestNeighbors, ProgressMeter, FunctionalDataUtils
 
 export quickshift, quickshiftlabels, quickshiftplot
 
@@ -51,7 +51,7 @@ end
 quickshift(data, a...) = quickshift(convert(Array{Float32,2},data), a...)
 quickshift(data::Array{Float32,2}, sigma) = quickshift(data, convert(Float32,sigma))
 function quickshift(data::Array{Float32,2}, sigma::Float32 = convert(Float32,median(distance(randsample(data,1000)))/100))
-    tree = KDTrees.KDTree(data)
+    tree = KDTree(data)
     # @show sigma
     N = len(data)
     factor1 = 1f0 / (2*sigma^2) ::Float32
@@ -59,7 +59,7 @@ function quickshift(data::Array{Float32,2}, sigma::Float32 = convert(Float32,med
     G = zeros(Float32, 1, N)
     nninds = [Array(Int,0) for n in 1:N]
     @showprogress 1 "Computing kernel distances ... " for n = 1:N
-        knnind = @p inball tree vec(at(data,n)) 3*sigma true | take 100
+        knnind = @p inrange tree vec(at(data,n)) 3*sigma true | take 100
         ind = length(knnind) > 10 ? knnind : 1:N
         nninds[n] = ind
         G[n] = gauss(data, n, ind, factor1, factor2)
@@ -72,7 +72,7 @@ function quickshift(data::Array{Float32,2}, sigma::Float32 = convert(Float32,med
     minind = 0
     mindist = inflength
     @showprogress 1 "Linking ... " for i in 1:N
-        for inds = {nninds[i], Nrange}
+        for inds = [nninds[i]; Nrange]
             minind, mindist = link(i, inds, G, data)
             if minind != 0
                 break

@@ -1,6 +1,9 @@
 # QuickShiftClustering
 
-[![Build Status](https://travis-ci.org/rened/QuickShiftClustering.jl.svg?branch=master)](https://travis-ci.org/rened/QuickShiftClustering.jl)
+[![Build Status](https://travis-ci.org/rened/QuickShiftClustering.jl.png)](https://travis-ci.org/rened/QuickShiftClustering.jl)
+[![Build Status](http://pkg.julialang.org/badges/QuickShiftClustering_0.4.svg)](http://pkg.julialang.org/?pkg=QuickShiftClustering&ver=0.4)
+[![Build Status](http://pkg.julialang.org/badges/QuickShiftClustering_0.5.svg)](http://pkg.julialang.org/?pkg=QuickShiftClustering&ver=0.5)
+
 
 QuickShift [1] is a fast method for hierarchical clustering, which first constructs the clustering tree, and subsequently allows to quickly cut links in the tree which exceed a specified length. This second step can be performed for different link-lengths without having to re-run the clustering itself. Care has been taken to provide a high-performance implementation.
 
