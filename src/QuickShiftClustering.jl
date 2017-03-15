@@ -126,7 +126,7 @@ function quickshiftplot(a::QuickShift, data, labels)
         end
 
     end
-    scatter(data[1,:],data[2,:], c = int(labels), edgecolor = "none")
+    scatter(data[1,:],data[2,:], c = asint(labels), edgecolor = "none")
 end
 
 end
