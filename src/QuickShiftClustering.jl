@@ -7,11 +7,11 @@ isinstalled("PyPlot") && begin
     using PyPlot
 end
 
-using NearestNeighbors, ProgressMeter, FunctionalDataUtils
+using NearestNeighbors, ProgressMeter, Distances, FunctionalData
 
 export quickshift, quickshiftlabels, quickshiftplot
 
-type QuickShift
+mutable struct QuickShift
     rootind
     links
     sigma
@@ -50,7 +50,7 @@ end
 
 quickshift(data, a...) = quickshift(convert(Array{Float32,2},data), a...)
 quickshift(data::Array{Float32,2}, sigma) = quickshift(data, convert(Float32,sigma))
-function quickshift(data::Array{Float32,2}, sigma::Float32 = convert(Float32,median(distance(randsample(data,1000)))/100))
+function quickshift(data::Array{Float32,2}, sigma::Float32=convert(Float32,median(pairwise(Euclidean(), randsample(data,1000)))/100))
     tree = KDTree(data)
     # @show sigma
     N = len(data)
@@ -103,8 +103,7 @@ function cut_internal(ind, links, labels, maxlength, label, maxlabel)
         if x[1] > maxlength
             maxlabel += 1
         end
-        maxlabel = max(label, cut_internal(x[2], links, labels, maxlength, 
-        x[1] > maxlength ? maxlabel : label, maxlabel)) 
+        maxlabel = max(label, cut_internal(x[2], links, labels, maxlength, x[1] > maxlength ? maxlabel : label, maxlabel)) 
     end
     maxlabel
 end
@@ -126,7 +125,7 @@ function quickshiftplot(a::QuickShift, data, labels)
         end
 
     end
-    scatter(data[1,:],data[2,:], c = asint(labels), edgecolor = "none")
+    scatter(data[1,:],data[2,:], c = Array{Int, 1}(labels), edgecolor = "none")
 end
 
 end
