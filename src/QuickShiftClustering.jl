@@ -54,29 +54,29 @@ end
 quickshift(data, a...) = quickshift(convert(Array{Float32,2},data), a...)
 quickshift(data::Array{Float32,2}, sigma) = quickshift(data, convert(Float32,sigma))
 
-function quickshift(data::Array{Float32,2}, sigma::Float32=convert(Float32, median(pairwise(Euclidean(), data[:,rand(1:size(data, 2), 1000)] / 100))))
+function quickshift(data::Array{Float32,2}, sigma::Float32=convert(Float32, median(pairwise(Euclidean(), data[:,rand(1:size(data, 2), 1000)] / 100, dims=2))))
     tree = KDTree(data)
     # @show sigma
     N = size(data, 2)
     factor1 = 1f0 / (2*sigma^2) ::Float32
     factor2 = 1/(2*pi*sigma^2*N)
     G = zeros(Float32, 1, N)
-    nninds = [Array(Int,0) for n in 1:N]
+    nninds = [Array{Int, 1}() for n in 1:N]
     @showprogress 1 "Computing kernel distances ... " for n = 1:N
         knnind = knn(tree, vec(data[:,n]), 100, true)[1]
         ind = length(knnind) > 10 ? knnind : 1:N
         nninds[n] = ind
         G[n] = gauss(data, n, ind, factor1, factor2)
     end
-    # println("median lenghts:",(@p map nninds length | flatten | median))
+
     links = [Any[] for i in 1:N]
     rootind = -1
     inflength = typemax(eltype(G))
-    Nrange = 1:N
+
     minind = 0
     mindist = inflength
     @showprogress 1 "Linking ... " for i in 1:N
-        for inds = [nninds[i]; Nrange]
+        for inds = [nninds[i]; 1:N]
             minind, mindist = link(i, inds, G, data)
             if minind != 0
                 break
