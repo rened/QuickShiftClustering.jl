@@ -6,6 +6,7 @@ if "PyPlot" in keys(Pkg.installed())
     using PyPlot
 end
 
+using Statistics
 using NearestNeighbors, ProgressMeter, Distances
 
 export quickshift, quickshiftlabels, quickshiftplot
@@ -52,7 +53,8 @@ end
 
 quickshift(data, a...) = quickshift(convert(Array{Float32,2},data), a...)
 quickshift(data::Array{Float32,2}, sigma) = quickshift(data, convert(Float32,sigma))
-function quickshift(data::Array{Float32,2}, sigma::Float32=convert(Float32,median(pairwise(Euclidean(), randsample(data,1000)))/100))
+
+function quickshift(data::Array{Float32,2}, sigma::Float32=convert(Float32, median(pairwise(Euclidean(), data[:,rand(1:size(data, 2), 1000)] / 100))))
     tree = KDTree(data)
     # @show sigma
     N = size(data, 2)
