@@ -3,7 +3,7 @@ module QuickShiftClustering
 using Pkg
 
 if "PyPlot" in keys(Pkg.installed())
-    using PyPlot
+    import PyPlot
 end
 
 using Statistics
@@ -97,7 +97,7 @@ function quickshift(data::Array{Float32,2}, sigma::Float32=convert(Float32, medi
 end
 
 function quickshiftlabels(a::QuickShift, maxlength = 10*a.sigma)
-    labels = zeros(Int32,length(a.links))
+    labels = zeros(Int,length(a.links))
     cut_internal!(labels, a.rootind, a.links, maxlength, 1, 2) 
     
     return labels
@@ -116,7 +116,7 @@ function cut_internal!(labels, ind, links, maxlength, label, maxlabel)
 end
 
 function quickshiftplot(a::QuickShift, data::Array{T, 2} where T, labels::Array{Int, 1})
-    if !isdefined(:PyPlot)
+    if !isdefined(Main, :PyPlot)
         error("quickshiftplot needs PyPlot installed and loaded using 'using PyPlot'")
     end
 
@@ -129,12 +129,12 @@ function quickshiftplot(a::QuickShift, data::Array{T, 2} where T, labels::Array{
         for x = a.links[i]
             to = data[:,x[2]]
             p = hcat(from,to)'
-            plot(p[:,1],p[:,2],"b-")
+            PyPlot.plot(p[:,1],p[:,2],"b-")
         end
 
     end
 
-    scatter(data[1,:],data[2,:], c = labels, edgecolor = "none")
+    PyPlot.scatter(data[1,:],data[2,:], c = labels, edgecolor = "none")
 end
 
 end
